@@ -7,6 +7,7 @@ const url = "https://randomuser.me/api/?results=200&nat=us";
 class App extends React.Component {
   state = {
     employees: [],
+    sorted: false
   };
 componentDidMount() {
   fetch(url)
@@ -15,6 +16,21 @@ componentDidMount() {
   .then((data) => this.setState({ employees: data.results }));
 }
 
+
+sortName = () => {
+  const {employees, sorted} = this.state;
+  let sorter;
+  if (!sorted){
+    sorter = employees.sort(function(a,b){
+      return(a.name.first > b.name.first ? 1 : -1)
+    })
+  } else {
+    sorter = employees.reverse();
+  }
+  this.setState({
+employees: sorter, sorted: !sorted})
+  };
+
 render() {
   const { employees } = this.state;
   return (
@@ -22,8 +38,12 @@ render() {
     <table className="table table-dark table-striped table-hover border-danger">
       <thead>
         <tr>
+          <th> Search</th>
+        </tr>
+        <tr>
           <th></th>
-          <th>First</th>
+          <th><button className='btn btn-danger' onClick={this.sortName}>
+                  </button>First</th>
           <th>Last</th>
           <th>Cell #</th>
           <th>Email</th>
